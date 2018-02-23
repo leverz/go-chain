@@ -20,7 +20,8 @@ type Block struct {
 	Hash          []byte // 本区块的 Hash 值
 }
 
-func (b Block) SetHash() {
+// 这里使用指针类型是希望调用该方法直接修改 Block 中的 Hash 字段的值
+func (b *Block) SetHash() {
 	timestamp := []byte(strconv.FormatInt(b.Timestamp, 10)) // int64 转为 字符串
 	headers := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
 	hash := sha256.Sum256(headers)
