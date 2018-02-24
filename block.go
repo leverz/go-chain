@@ -18,6 +18,7 @@ type Block struct {
 	Data          []byte // Block 中存储的有意义的信息
 	PrevBlockHash []byte // 上一个区块的 Hash 值
 	Hash          []byte // 本区块的 Hash 值
+	Nonce int
 }
 
 // 这里使用指针类型是希望调用该方法直接修改 Block 中的 Hash 字段的值
@@ -29,7 +30,11 @@ func (b *Block) SetHash() {
 }
 
 func NewBlock(data string, prevBlockHash []byte) Block {
-	block := Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}}
-	block.SetHash()
+	block := Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+	pow := createProofOfWork(block)
+	nonce, hash := pow.Run()
+
+	block.Hash = hash[:]
+	block.Nonce = nonce
 	return block
 }

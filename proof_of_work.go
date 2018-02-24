@@ -16,15 +16,15 @@ const targetBits = 24
 const maxNonce = math.MaxInt64
 
 type ProofOfWork struct {
-	block *Block
-	target *big.Int
+	block Block
+	target big.Int
 }
 
-func createProofOfWork(b *Block) ProofOfWork  {
+func createProofOfWork(b Block) ProofOfWork  {
 	target := big.NewInt(1)
 	target.Lsh(target, uint(256 - targetBits))
 
-	return ProofOfWork{b, target}
+	return ProofOfWork{b, *target}
 }
 
 func (pow ProofOfWork) prepareData(nonce int) []byte  {
@@ -53,7 +53,7 @@ func (pow ProofOfWork) Run() (int, []byte)  {
 		fmt.Printf("\r%x", hash)
 		hashInt.SetBytes(hash[:])
 
-		if hashInt.Cmp(pow.target) == -1 {
+		if hashInt.Cmp(&pow.target) == -1 {
 			break
 		} else {
 			nonce++
