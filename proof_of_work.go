@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"math"
 	"crypto/sha256"
+	"strconv"
 )
 
 // 比特币中使用 Hashcash 算法计算 Hash
@@ -18,6 +19,10 @@ const maxNonce = math.MaxInt64
 type ProofOfWork struct {
 	block Block
 	target big.Int
+}
+
+func IntToHex(data int64) []byte {
+	return []byte( strconv.FormatInt(data, 16) )
 }
 
 func createProofOfWork(b Block) ProofOfWork  {
