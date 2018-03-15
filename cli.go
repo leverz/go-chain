@@ -13,7 +13,7 @@ type CLI struct {
 
 func (cli *CLI) printUsage()  {
 	fmt.Printf("Usage: ")
-	fmt.Printf("  addBlock -data BLOCK_DATA - add a block to the blockchain")
+	fmt.Printf("  addblock -data BLOCK_DATA - add a block to the blockchain")
 	fmt.Printf("  printchain - print all the blocks of the blockchain")
 }
 

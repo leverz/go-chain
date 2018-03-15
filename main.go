@@ -7,8 +7,10 @@ package main
 
 func main()  {
 	blockChain := CreateBlockChain()
-	blockChain.AddBlock("Send 1 BTC to Lever")
-	blockChain.AddBlock("Send 0.01 BTC to Wang")
+	defer blockChain.db.Close()
+
+	cli := CLI{&blockChain}
+	cli.Run()
 
 	//for _, block := range blockChain.blocks {
 	//	fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
