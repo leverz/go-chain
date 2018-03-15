@@ -20,7 +20,7 @@ type ChainIterator struct {
 func (c *Chain) AddBlock (data string)  {
 	err := c.db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blocksBucket))
-		lastHash := b.Get([]byte("l"))
+		lastHash := b.Get([]byte("last"))
 		newBlock := NewBlock(data, lastHash)
 		serializeResult, err := SerializeBlock(newBlock)
 		LogError("Serialize Error", err)
