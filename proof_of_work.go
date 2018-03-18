@@ -36,7 +36,7 @@ func (pow ProofOfWork) prepareData(nonce int) []byte  {
 	return bytes.Join(
 		[][]byte{
 			pow.block.PrevBlockHash,
-			pow.block.Data,
+			pow.block.HashTransactions(), // 交易信息 hash 化后进行 PoW
 			IntToHex(pow.block.Timestamp),
 			IntToHex(int64(targetBits)),
 			IntToHex(int64(nonce)),

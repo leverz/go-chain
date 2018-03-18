@@ -14,8 +14,8 @@ import (
 
 // 区块的数据结构
 type Block struct {
-	Timestamp     int64  // Block 创建时的时间戳
-	Data          []byte // Block 中存储的有意义的信息
+	Timestamp int64  // Block 创建时的时间戳
+	Transactions []*Transaction // Block 中存储的有意义的信息
 	PrevBlockHash []byte // 上一个区块的 Hash 值
 	Hash          []byte // 本区块的 Hash 值
 	Nonce int
@@ -29,8 +29,18 @@ func (b *Block) SetHash() {
 	b.Hash = hash[:]
 }
 
-func NewBlock(data string, prevBlockHash []byte) Block {
-	block := Block{time.Now().Unix(), []byte(data), prevBlockHash, []byte{}, 0}
+func (b *Block) HashTransactions() []byte  {
+	var txHashes [][]byte
+	var txHash [32]byte
+	for _, tx := range b.Transactions {
+		txHashes = append(txHashes, tx.ID)
+	}
+	txHash = sha256.Sum256(bytes.Join(txHashes, []byte{}))
+	return txHash[:]
+}
+
+func NewBlock(txs []*Transaction, prevBlockHash []byte) Block {
+	block := Block{time.Now().Unix(), txs, prevBlockHash, []byte{}, 0}
 	pow := createProofOfWork(block)
 	nonce, hash := pow.Run()
 

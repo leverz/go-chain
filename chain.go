@@ -2,9 +2,12 @@ package main
 
 import (
 	"github.com/boltdb/bolt"
+	"github.com/Go-zh/tools/go/gcimporter15/testdata"
+	"net/mail"
 )
 
 const blocksBucket = "blocks"
+const genesisCoinbaseData = "Genesis Block"
 
 type Chain struct {
 	tip []byte
@@ -33,11 +36,11 @@ func (c *Chain) AddBlock (data string)  {
 	LogError("bolt update error", err)
 }
 
-func CreateGenesisBlock() Block  {
-	return NewBlock("Genesis Block", []byte{})
+func CreateGenesisBlock(coinbase *Transaction) Block  {
+	return NewBlock([]*Transaction{coinbase}, []byte{})
 }
 
-func CreateBlockChain() Chain {
+func CreateBlockChain(address string) Chain {
 	var tip []byte
 	db, err := bolt.Open("chain.db", 0600, nil)
 	LogError("dolt open db error", err)
@@ -46,7 +49,8 @@ func CreateBlockChain() Chain {
 
 		// 数据库中没有 block
 		if b == nil {
-			genesis := CreateGenesisBlock()
+			cbtx := CreateCoinbaseTX(address, genesisCoinbaseData)
+			genesis := CreateGenesisBlock(cbtx)
 			b, err := tx.CreateBucket([]byte(blocksBucket))
 			LogError("dolt create bucket error", err)
 			serializeResult, err := SerializeBlock(genesis)
